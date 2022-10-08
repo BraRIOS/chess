@@ -1,0 +1,4 @@
+package MovementValidator
+
+class DistanceMovementValidator {
+}
