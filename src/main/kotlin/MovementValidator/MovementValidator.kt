@@ -1,4 +1,0 @@
-package MovementValidator
-
-interface MovementValidator {
-}

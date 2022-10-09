@@ -1,4 +1,0 @@
-package board
-
-class ClassicBoard {
-}
