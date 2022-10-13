@@ -42,7 +42,7 @@ class Board {
         return boardShape.isInside(position)
     }
 
-    fun isOccupied(position: Position): Boolean {
-        return positions[position]!!.isPresent
+    fun isOccupiedBySameColor(position: Position): Boolean {
+        return positions[position]!!.isPresent && positions[position]!!.get().color == positions[position]!!.get().color
     }
 }
