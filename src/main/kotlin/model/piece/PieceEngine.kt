@@ -1,4 +1,3 @@
 package model.piece
 
-class PieceEngine {
-}
+class PieceEngine

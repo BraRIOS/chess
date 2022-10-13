@@ -24,3 +24,7 @@ tasks.test {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+ktlint {
+    disabledRules.set(setOf("no-wildcard-imports"))
+}

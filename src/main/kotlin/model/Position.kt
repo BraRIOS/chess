@@ -1,3 +1,8 @@
 package model
 
-class Position(x: Int, y: Int)
+import kotlin.math.abs
+
+class Position(val x: Int, val y: Int) {
+    fun distanceTo(position: Position): Int =
+        abs(x - position.x) + abs(y - position.y)
+}

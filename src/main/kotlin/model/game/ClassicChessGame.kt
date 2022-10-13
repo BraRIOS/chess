@@ -5,7 +5,7 @@ import model.Player
 import model.Position
 import model.board.ClassicBoard
 
-class ClassicChessGame(player1: Player, player2: Player, board: ClassicBoard ) : Game(player1, player2, board) {
+class ClassicChessGame(player1: Player, player2: Player, board: ClassicBoard) : Game(player1, player2, board) {
     override fun start() {
         TODO("Not yet implemented")
     }
@@ -25,5 +25,4 @@ class ClassicChessGame(player1: Player, player2: Player, board: ClassicBoard ) :
     override fun end() {
         TODO("Not yet implemented")
     }
-
 }

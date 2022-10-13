@@ -2,4 +2,4 @@ package model
 
 import model.piece.Piece
 
-class Movement(start: Position, end: Position, piece: Piece)
+class Movement(val start: Position, val end: Position, val piece: Piece)

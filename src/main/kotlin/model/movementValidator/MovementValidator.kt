@@ -1,3 +1,0 @@
-package model.movementValidator
-
-interface MovementValidator
