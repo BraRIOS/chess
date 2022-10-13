@@ -8,10 +8,10 @@ class KnightValidator : MovementValidator{
     private val distanceMovementValidator = DistanceMovementValidator(1)
 
     override fun validateMovement(movement: Movement, board: Board): Boolean {
-        return distanceMovementValidator.validateDistanceXWithLimit(movement, board, 2) &&
-                distanceMovementValidator.validateDistanceYWithLimit(movement, board, 1) ||
-                distanceMovementValidator.validateDistanceXWithLimit(movement, board, 1) &&
-                distanceMovementValidator.validateDistanceYWithLimit(movement, board, 2) &&
+        return distanceMovementValidator.validateDistanceXWithLimit(movement, 2) &&
+                distanceMovementValidator.validateDistanceYWithLimit(movement, 1) ||
+                distanceMovementValidator.validateDistanceXWithLimit(movement, 1) &&
+                distanceMovementValidator.validateDistanceYWithLimit(movement, 2) &&
                 board.isInside(movement.end) && !board.isOccupiedBySameColor(movement.end)
     }
 }

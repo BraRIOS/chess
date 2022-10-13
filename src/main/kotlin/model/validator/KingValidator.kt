@@ -23,14 +23,14 @@ class KingValidator : MovementValidator, PieceBetweenValidator {
         val distanceY = movement.start.distanceTo(movement.end)
         return when {
             distanceX == 0 -> {
-                if (distanceMovementValidator.validateDistanceY(movement, board)) {
+                if (distanceMovementValidator.validateDistanceY(movement)) {
                     verticalMovementValidator.isPieceBetween(movement, board)
                 } else {
                     false
                 }
             }
             distanceY == 0 -> {
-                if (distanceMovementValidator.validateDistanceX(movement, board)) {
+                if (distanceMovementValidator.validateDistanceX(movement)) {
                     horizontalMovementValidator.isPieceBetween(movement, board)
                 } else {
                     false

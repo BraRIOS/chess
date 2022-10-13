@@ -6,7 +6,6 @@ import model.validator.movementValidator.*
 
 class PawnValidator : MovementValidator, PieceBetweenValidator {
     private val distanceMovementValidator = DistanceMovementValidator(1)
-    private val distanceMovementValidator2 = DistanceMovementValidator(2)
     private val verticalMovementValidator = VerticalMovementValidator()
     private val diagonalMovementValidator = DiagonalMovementValidator()
 
@@ -28,10 +27,16 @@ class PawnValidator : MovementValidator, PieceBetweenValidator {
     }
 
     private fun validatePawnMovementDiagonal(movement: Movement, board: Board): Boolean {
-        TODO("Not yet implemented")
+        return diagonalMovementValidator.validateMovement(movement, board) && distanceMovementValidator.validateMovement(movement, board)
     }
 
     private fun validatePawnMovementForward(movement: Movement, board: Board): Boolean {
+        return verticalMovementValidator.validateMovement(movement, board) &&
+                distanceMovementValidator.validateDistanceY(movement) &&
+                !board.isOccupied(movement.end)
+    }
 
+    override fun isPieceBetween(movement: Movement, board: Board): Boolean {
+        TODO("Not yet implemented")
     }
 }

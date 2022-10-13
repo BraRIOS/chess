@@ -11,6 +11,7 @@ class Board {
     private var positions = mutableMapOf<Position, Optional<Piece>>()
     private lateinit var boardShape: BoardShape
     private lateinit var piecePositionInitializer: PiecePositionInitializer
+    private val movements = mutableListOf<Movement>()
 
     private fun setBoardShape(boardShape: BoardShape) {
         this.boardShape = boardShape
@@ -32,7 +33,10 @@ class Board {
         val piece = positions[movement.start]!!.get()
         positions[movement.start] = Optional.empty()
         positions[movement.end] = Optional.of(piece)
+        movements.add(movement)
     }
+
+    fun getMovements() = movements
 
     fun getPositions(): MutableMap<Position, Optional<Piece>> {
         return positions
@@ -44,5 +48,9 @@ class Board {
 
     fun isOccupiedBySameColor(position: Position): Boolean {
         return positions[position]!!.isPresent && positions[position]!!.get().color == positions[position]!!.get().color
+    }
+
+    fun isOccupied(position: Position): Boolean {
+        return positions[position]!!.isPresent
     }
 }
