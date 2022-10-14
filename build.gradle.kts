@@ -1,20 +1,33 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    java
+    application
     kotlin("jvm") version "1.7.10"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("org.openjfx.javafxplugin").version("0.0.13")
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "chess"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/austral-ingsis/chess-ui")
+        credentials {
+            username = System.getenv("GITHUB_USER")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
     testImplementation(kotlin("test"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("edu.austral.dissis.chess:chess-ui:1.0.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 }
 
 tasks.test {
@@ -25,6 +38,15 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
+javafx {
+    version = "18"
+    modules = listOf("javafx.graphics")
+}
+
 ktlint {
     disabledRules.set(setOf("no-wildcard-imports"))
+}
+application {
+    // Define the main class for the application.
+    mainClass.set("AppKt")
 }

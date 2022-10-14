@@ -6,7 +6,8 @@ import model.board.Board
 
 class VerticalMovementValidator : MovementValidator, PieceBetweenValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean =
-        movement.start.x == movement.end.x && movement.start.y != movement.end.y && board.isInside(movement.end) && !board.isOccupiedBySameColor(movement.end)
+        movement.start.x == movement.end.x && movement.start.y != movement.end.y &&
+                board.isInside(movement.end) && !board.isOccupiedBySameColor(movement.end)
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean {
         val y = if (movement.start.y < movement.end.y) movement.start.y + 1 else movement.start.y - 1

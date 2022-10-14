@@ -5,7 +5,7 @@ import model.Player
 import model.Position
 import model.board.Board
 
-abstract class Game(player1: Player, player2: Player, board: Board) {
+abstract class Game(players: ArrayList<Player>, board: Board) {
     protected var turn: Int = 0
     protected var winner: Player? = null
     protected lateinit var currentPlayer: Player
@@ -16,7 +16,6 @@ abstract class Game(player1: Player, player2: Player, board: Board) {
     protected var draw: Boolean = false
 
     abstract fun start()
-    abstract fun selectPieceAndShowOptions(position: Position)
     abstract fun movePiece(movement: Movement)
     abstract fun nextTurn()
     abstract fun end()

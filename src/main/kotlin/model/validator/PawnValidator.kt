@@ -13,9 +13,7 @@ class PawnValidator : MovementValidator, PieceBetweenValidator {
         return validatePawnMovement(movement, board) && !isPieceBetween(movement, board)
     }
 
-    /**
-     * REVISAR
-     */
+
     private fun validatePawnMovement(movement: Movement, board: Board): Boolean {
         return validatePawnMovementForward(movement, board) ||
                 validatePawnMovementDiagonal(movement, board) ||
@@ -23,11 +21,14 @@ class PawnValidator : MovementValidator, PieceBetweenValidator {
     }
 
     private fun validatePawnMovementFirstMove(movement: Movement, board: Board): Boolean {
-        TODO("Not yet implemented")
+        return distanceMovementValidator.validateDistanceYWithLimit(movement, 2) &&
+                movement.isFirstMove() && verticalMovementValidator.validateMovement(movement, board)
+                && !board.isOccupied(movement.end)
     }
 
     private fun validatePawnMovementDiagonal(movement: Movement, board: Board): Boolean {
-        return diagonalMovementValidator.validateMovement(movement, board) && distanceMovementValidator.validateMovement(movement, board)
+        return diagonalMovementValidator.validateMovement(movement, board) &&
+                distanceMovementValidator.validateMovement(movement, board)
     }
 
     private fun validatePawnMovementForward(movement: Movement, board: Board): Boolean {
@@ -37,6 +38,6 @@ class PawnValidator : MovementValidator, PieceBetweenValidator {
     }
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean {
-        TODO("Not yet implemented")
+        return verticalMovementValidator.isPieceBetween(movement, board)
     }
 }
