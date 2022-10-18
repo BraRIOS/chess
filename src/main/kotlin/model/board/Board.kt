@@ -4,8 +4,10 @@ import model.Movement
 import model.Position
 import model.board.boardShapes.BoardShape
 import model.board.piecePositionInitializer.PiecePositionInitializer
+import model.enums.Color
+import model.enums.PieceType
 import model.piece.Piece
-import java.util.Optional
+import java.util.*
 
 class Board {
     private var positions = mutableMapOf<Position, Optional<Piece>>()
@@ -39,7 +41,7 @@ class Board {
     fun getMovements() = movements
 
     fun getPositions(): MutableMap<Position, Optional<Piece>> {
-        return positions
+        return Collections.unmodifiableMap(positions)
     }
 
     fun isInside(position: Position): Boolean {
@@ -53,4 +55,29 @@ class Board {
     fun isOccupied(position: Position): Boolean {
         return positions[position]!!.isPresent
     }
+
+    fun getKingPosition(color: Color): Position {
+        return positions.filter { it.value.isPresent && it.value.get().color == color && it.value.get().type == PieceType.KING }.keys.first()
+    }
+
+    fun getPiecePosition(piece: Piece): Position {
+        return positions.filter { it.value.isPresent && it.value.get() == piece }.keys.first()
+    }
+
+    fun getPiecePosition(pieceType: PieceType, color: Color): Position {
+        return positions.filter { it.value.isPresent && it.value.get().type == pieceType && it.value.get().color == color }.keys.first()
+    }
+
+    fun getOpponentPieces(color: Color): List<Piece> {
+        return positions.filter { it.value.isPresent && it.value.get().color != color }.values.map { it.get() }
+    }
+
+    fun getKing(color: Color): Piece {
+        return positions.filter { it.value.isPresent && it.value.get().color == color && it.value.get().type == PieceType.KING }.values.first().get()
+    }
+
+    fun getRooks(color: Color): List<Piece> {
+        return positions.filter { it.value.isPresent && it.value.get().color == color && it.value.get().type == PieceType.ROOK }.values.map { it.get() }
+    }
+
 }
