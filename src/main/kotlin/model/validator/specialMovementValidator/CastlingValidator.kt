@@ -1,25 +1,50 @@
 package model.validator.specialMovementValidator
 
 import model.Movement
+import model.Position
 import model.board.Board
 import model.enums.Color
 import model.enums.PieceType
+import model.piece.Piece
 import model.validator.CheckValidator
 import model.validator.KingValidator
 import model.validator.RookValidator
 
 class CastlingValidator{
     private val rookValidator = RookValidator()
-    private val kingValidator = KingValidator()
     private val checkValidator = CheckValidator()
+    private val kingValidator = KingValidator()
 
-    fun canCastling(board: Board, color: Color): Boolean {
-        val rooks = board.getRooks(color)
-        val rookPosition = board.getPiecePosition(PieceType.ROOK, color)
-        val kingPosition = board.getPiecePosition(PieceType.KING, color)
+    fun canCastlingWithRook(board: Board, color: Color, rook:Piece): Boolean {
+        val king = board.getPiece(PieceType.KING, color)
+        return king.hasMoved.not() && !checkValidator.isCheck(board, color) && !isCastlingThroughCheck(board, color, rook)
+    }
 
-        return board.getKing(color).hasMoved && !checkValidator.isCheck(board, color) && rooks.all { !it.hasMoved } &&
-                rooks.all { rook -> !rookValidator.isPieceBetween(Movement(rookPosition, kingPosition, rook), board) } &&
-                rooks.all { rook -> !kingValidator.isPieceBetween(Movement(rookPosition, kingPosition, rook), board) }
+    private fun isCastlingThroughCheck(board: Board, color: Color, rook: Piece): Boolean {
+        val king = board.getPiece(PieceType.KING, color)
+        val kingPosition = board.getPiecePosition(king)
+        val rookPosition = board.getPiecePosition(rook)
+        val kingMovement = Movement(kingPosition, kingPosition, king)
+        val rookMovement = Movement(rookPosition, rookPosition, rook)
+        return when {
+            rook.hasMoved -> true
+            kingPosition.x < rookPosition.x -> {
+                board.movePiece(Movement(kingPosition, Position(kingPosition.x + 1, kingPosition.y), king))
+                board.movePiece(Movement(rookPosition, Position(rookPosition.x - 1, rookPosition.y), rook))
+                isCastlingThroughCheck(board, kingMovement, rookMovement, color)
+            }
+            else -> {
+                board.movePiece(Movement(kingPosition, Position(kingPosition.x - 1, kingPosition.y), king))
+                board.movePiece(Movement(rookPosition, Position(rookPosition.x + 1, rookPosition.y), rook))
+                isCastlingThroughCheck(board, kingMovement, rookMovement, color)
+            }
+        }
+    }
+
+    private fun isCastlingThroughCheck(board: Board, kingMovement: Movement, rookMovement: Movement, color: Color): Boolean {
+        val isCheck = checkValidator.isCheck(board, color)
+        board.movePiece(kingMovement)
+        board.movePiece(rookMovement)
+        return isCheck || !kingValidator.validateMovement(kingMovement, board) || !rookValidator.validateMovement(rookMovement, board)
     }
 }

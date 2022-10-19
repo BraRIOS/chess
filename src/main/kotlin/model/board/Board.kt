@@ -56,10 +56,6 @@ class Board {
         return positions[position]!!.isPresent
     }
 
-    fun getKingPosition(color: Color): Position {
-        return positions.filter { it.value.isPresent && it.value.get().color == color && it.value.get().type == PieceType.KING }.keys.first()
-    }
-
     fun getPiecePosition(piece: Piece): Position {
         return positions.filter { it.value.isPresent && it.value.get() == piece }.keys.first()
     }
@@ -68,16 +64,15 @@ class Board {
         return positions.filter { it.value.isPresent && it.value.get().type == pieceType && it.value.get().color == color }.keys.first()
     }
 
+    fun getPiece(position: Position): Piece {
+        return positions[position]!!.get()
+    }
+
+    fun getPiece(pieceType: PieceType, color: Color): Piece {
+        return positions.filter { it.value.isPresent && it.value.get().type == pieceType && it.value.get().color == color }.values.first().get()
+    }
+
     fun getOpponentPieces(color: Color): List<Piece> {
         return positions.filter { it.value.isPresent && it.value.get().color != color }.values.map { it.get() }
     }
-
-    fun getKing(color: Color): Piece {
-        return positions.filter { it.value.isPresent && it.value.get().color == color && it.value.get().type == PieceType.KING }.values.first().get()
-    }
-
-    fun getRooks(color: Color): List<Piece> {
-        return positions.filter { it.value.isPresent && it.value.get().color == color && it.value.get().type == PieceType.ROOK }.values.map { it.get() }
-    }
-
 }
