@@ -29,13 +29,13 @@ class CastlingValidator{
         return when {
             rook.hasMoved -> true
             kingPosition.x < rookPosition.x -> {
-                board.movePiece(Movement(kingPosition, Position(kingPosition.x + 1, kingPosition.y), king))
-                board.movePiece(Movement(rookPosition, Position(rookPosition.x - 1, rookPosition.y), rook))
+                kingMovement.end = Position(kingPosition.x + 1, kingPosition.y)
+                rookMovement.end = Position(rookPosition.x - 1, rookPosition.y)
                 isCastlingThroughCheck(board, kingMovement, rookMovement, color)
             }
             else -> {
-                board.movePiece(Movement(kingPosition, Position(kingPosition.x - 1, kingPosition.y), king))
-                board.movePiece(Movement(rookPosition, Position(rookPosition.x + 1, rookPosition.y), rook))
+                kingMovement.end = Position(kingPosition.x - 1, kingPosition.y)
+                rookMovement.end = Position(rookPosition.x + 1, rookPosition.y)
                 isCastlingThroughCheck(board, kingMovement, rookMovement, color)
             }
         }
