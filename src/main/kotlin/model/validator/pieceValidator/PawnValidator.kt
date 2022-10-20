@@ -1,10 +1,12 @@
-package model.validator
+package model.validator.pieceValidator
 
 import model.Movement
 import model.board.Board
-import model.validator.movementValidator.*
+import model.validator.movementValidator.DiagonalMovementValidator
+import model.validator.movementValidator.DistanceMovementValidator
+import model.validator.movementValidator.VerticalMovementValidator
 
-class PawnValidator : MovementValidator, PieceBetweenValidator {
+class PawnValidator : PieceValidator {
     private val distanceMovementValidator = DistanceMovementValidator(1)
     private val verticalMovementValidator = VerticalMovementValidator()
     private val diagonalMovementValidator = DiagonalMovementValidator()

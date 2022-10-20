@@ -40,7 +40,7 @@ tasks.withType<KotlinCompile> {
 
 javafx {
     version = "18"
-    modules = listOf("javafx.graphics")
+    modules = listOf("javafx.graphics", "javafx.controls", "javafx.fxml")
 }
 
 ktlint {

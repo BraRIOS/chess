@@ -1,7 +1,7 @@
 package model.board.piecePositionInitializer
 
+import model.Piece
 import model.Position
-import model.piece.Piece
 import java.util.*
 
 interface PiecePositionInitializer {

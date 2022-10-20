@@ -1,8 +1,8 @@
 package model.board.boardShapes
 
+import model.Piece
 import model.Position
-import model.piece.Piece
-import java.util.Optional
+import java.util.*
 
 interface BoardShape {
     fun isInside(position: Position): Boolean

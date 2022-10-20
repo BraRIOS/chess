@@ -10,7 +10,7 @@ class CheckValidator {
         val kingPosition = board.getPiecePosition(PieceType.KING, color)
         val provider = ValidatorProvider()
         return board.getOpponentPieces(color).any { piece ->
-            provider.getValidator(piece.type).validateMovement(Movement(board.getPiecePosition(piece), kingPosition, piece), board)
+            provider.getPieceValidator(piece.type).validateMovement(Movement(board.getPiecePosition(piece), kingPosition, piece), board)
         }
     }
 }

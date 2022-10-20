@@ -1,20 +1,18 @@
-package model.validator
+package model.validator.pieceValidator
 
 import model.Movement
-import model.Position
 import model.board.Board
-import model.validator.movementValidator.*
+import model.validator.movementValidator.HorizontalMovementValidator
+import model.validator.movementValidator.VerticalMovementValidator
 
-class QueenValidator : MovementValidator, PieceBetweenValidator {
-    private val diagonalMovementValidator = DiagonalMovementValidator()
-    private val horizontalMovementValidator = HorizontalMovementValidator()
+class RookValidator: PieceValidator {
     private val verticalMovementValidator = VerticalMovementValidator()
+    private val horizontalMovementValidator = HorizontalMovementValidator()
 
     override fun validateMovement(movement: Movement, board: Board): Boolean {
         return !isPieceBetween(movement, board) &&
-                (diagonalMovementValidator.validateMovement(movement, board) ||
-                horizontalMovementValidator.validateMovement(movement, board) ||
-                verticalMovementValidator.validateMovement(movement, board))
+                (verticalMovementValidator.validateMovement(movement, board) ||
+                horizontalMovementValidator.validateMovement(movement, board))
     }
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
@@ -28,7 +26,7 @@ class QueenValidator : MovementValidator, PieceBetweenValidator {
                 horizontalMovementValidator.isPieceBetween(movement, board)
             }
             else -> {
-                diagonalMovementValidator.isPieceBetween(movement, board)
+                false
             }
         }
     }

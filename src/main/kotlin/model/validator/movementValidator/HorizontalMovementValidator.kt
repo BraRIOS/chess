@@ -6,10 +6,10 @@ import model.board.Board
 
 class HorizontalMovementValidator : MovementValidator, PieceBetweenValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean =
-        movement.start.y == movement.end.y && movement.start.x != movement.end.x && board.isInside(movement.end) && !board.isOccupiedBySameColor(movement.end)
+        movement.start.y == movement.end.y && movement.start.x != movement.end.x && board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
         val x = if (movement.start.x < movement.end.x) movement.start.x + 1 else movement.start.x - 1
-        return (x until movement.end.x).any { board.isOccupiedBySameColor(Position(it, movement.start.y)) }
+        return (x until movement.end.x).any { board.isOccupied(Position(it, movement.start.y)) }
     }
 }

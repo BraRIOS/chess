@@ -1,10 +1,10 @@
 package model.board.boardShapes
 
+import model.Piece
 import model.Position
-import model.piece.Piece
 import java.util.*
 
-class SquareShapedBoard(private val limit: Int) : BoardShape {
+class SquareShapedBoard(private val limit: Int) : BoardShape, Squared {
     override fun isInside(position: Position): Boolean {
         return position.x in 0..limit && position.y in 0..limit
     }
@@ -17,5 +17,9 @@ class SquareShapedBoard(private val limit: Int) : BoardShape {
             }
         }
         return boardShape
+    }
+
+    override fun getLimit(): Int {
+        return limit
     }
 }

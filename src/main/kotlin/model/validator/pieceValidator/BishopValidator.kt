@@ -1,13 +1,10 @@
-package model.validator
+package model.validator.pieceValidator
 
 import model.Movement
 import model.board.Board
 import model.validator.movementValidator.DiagonalMovementValidator
-import model.validator.movementValidator.DistanceMovementValidator
-import model.validator.movementValidator.MovementValidator
-import model.validator.movementValidator.PieceBetweenValidator
 
-class BishopValidator : MovementValidator, PieceBetweenValidator {
+class BishopValidator : PieceValidator {
     private val diagonalMovementValidator = DiagonalMovementValidator()
     override fun validateMovement(movement: Movement, board: Board): Boolean {
         return diagonalMovementValidator.validateMovement(movement, board) &&

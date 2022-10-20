@@ -1,10 +1,10 @@
 package model.validator
 
 import model.enums.PieceType
-import model.validator.movementValidator.MovementValidator
+import model.validator.pieceValidator.*
 
 class ValidatorProvider {
-    fun getValidator(pieceType: PieceType): MovementValidator {
+    fun getPieceValidator(pieceType: PieceType): PieceValidator {
         return when (pieceType) {
             PieceType.PAWN -> PawnValidator()
             PieceType.ROOK -> RookValidator()

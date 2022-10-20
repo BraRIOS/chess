@@ -1,9 +1,9 @@
 package model.board.piecePositionInitializer
 
+import model.Piece
 import model.Position
 import model.enums.Color
 import model.enums.PieceType
-import model.piece.Piece
 import java.util.*
 
 class ClassicPositionInitializer : PiecePositionInitializer {
@@ -27,8 +27,8 @@ class ClassicPositionInitializer : PiecePositionInitializer {
         positions[Position(2, 7)] = Optional.of(Piece(Color.BLACK, PieceType.BISHOP, Position(2, 7)))
         positions[Position(5, 7)] = Optional.of(Piece(Color.BLACK, PieceType.BISHOP, Position(5, 7)))
         positions[Position(3, 0)] = Optional.of(Piece(Color.WHITE, PieceType.QUEEN, Position(3, 0)))
-        positions[Position(3, 7)] = Optional.of(Piece(Color.BLACK, PieceType.QUEEN, Position(3, 7)))
+        positions[Position(4, 7)] = Optional.of(Piece(Color.BLACK, PieceType.QUEEN, Position(4, 7)))
         positions[Position(4, 0)] = Optional.of(Piece(Color.WHITE, PieceType.KING,  Position(4, 0)))
-        positions[Position(4, 7)] = Optional.of(Piece(Color.BLACK, PieceType.KING, Position(4, 7)))
+        positions[Position(3, 7)] = Optional.of(Piece(Color.BLACK, PieceType.KING, Position(3, 7)))
     }
 }

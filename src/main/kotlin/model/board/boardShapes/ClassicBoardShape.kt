@@ -1,10 +1,10 @@
 package model.board.boardShapes
 
+import model.Piece
 import model.Position
-import model.piece.Piece
 import java.util.*
 
-class ClassicBoardShape : BoardShape {
+class ClassicBoardShape : BoardShape, Squared {
     private val squareShapedBoard = SquareShapedBoard(7)
 
     override fun isInside(position: Position): Boolean =
@@ -12,4 +12,7 @@ class ClassicBoardShape : BoardShape {
 
     override fun getBoardShape(): MutableMap<Position, Optional<Piece>> =
         squareShapedBoard.getBoardShape()
+
+    override fun getLimit(): Int =
+        squareShapedBoard.getLimit()
 }
