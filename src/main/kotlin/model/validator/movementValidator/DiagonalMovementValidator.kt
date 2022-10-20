@@ -5,11 +5,15 @@ import model.Position
 import model.board.Board
 import kotlin.math.abs
 
-class DiagonalMovementValidator : MovementValidator, PieceBetweenValidator {
+class DiagonalMovementValidator : MovementValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean {
-        val distanceX = movement.start.distanceTo(movement.end)
-        val distanceY = movement.start.distanceTo(movement.end)
+        val distanceX = movement.start.distanceToX(movement.end)
+        val distanceY = movement.start.distanceToY(movement.end)
         return distanceX == distanceY && distanceX != 0 && board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)
+    }
+
+    override fun getValidMovements(position: Position, board: Board): List<Movement> {
+        TODO("Not yet implemented")
     }
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{

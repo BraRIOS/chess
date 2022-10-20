@@ -2,12 +2,9 @@ package model.validator.pieceValidator
 
 import model.Movement
 import model.board.Board
-import model.validator.movementValidator.DiagonalMovementValidator
-import model.validator.movementValidator.DistanceMovementValidator
-import model.validator.movementValidator.HorizontalMovementValidator
-import model.validator.movementValidator.VerticalMovementValidator
+import model.validator.movementValidator.*
 
-class KingValidator : PieceValidator {
+class KingValidator : MovementValidator {
     private val diagonalMovementValidator = DiagonalMovementValidator()
     private val horizontalMovementValidator = HorizontalMovementValidator()
     private val verticalMovementValidator = VerticalMovementValidator()

@@ -1,10 +1,12 @@
 package model.validator.pieceValidator
 
 import model.Movement
+import model.Position
 import model.board.Board
 import model.validator.movementValidator.DistanceMovementValidator
+import model.validator.movementValidator.MovementValidator
 
-class KnightValidator : PieceValidator{
+class KnightValidator : MovementValidator {
     private val distanceMovementValidator = DistanceMovementValidator(1)
 
     override fun validateMovement(movement: Movement, board: Board): Boolean {
@@ -13,6 +15,10 @@ class KnightValidator : PieceValidator{
                 distanceMovementValidator.validateDistanceXWithLimit(movement, 1) &&
                 distanceMovementValidator.validateDistanceYWithLimit(movement, 2) &&
                 board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)
+    }
+
+    override fun getValidMovements(position: Position, board: Board): List<Movement> {
+        TODO()
     }
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean {

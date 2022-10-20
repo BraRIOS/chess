@@ -4,9 +4,10 @@ import model.Movement
 import model.board.Board
 import model.validator.movementValidator.DiagonalMovementValidator
 import model.validator.movementValidator.HorizontalMovementValidator
+import model.validator.movementValidator.MovementValidator
 import model.validator.movementValidator.VerticalMovementValidator
 
-class QueenValidator : PieceValidator {
+class QueenValidator : MovementValidator {
     private val diagonalMovementValidator = DiagonalMovementValidator()
     private val horizontalMovementValidator = HorizontalMovementValidator()
     private val verticalMovementValidator = VerticalMovementValidator()
@@ -19,8 +20,8 @@ class QueenValidator : PieceValidator {
     }
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
-        val distanceX = movement.start.distanceTo(movement.end)
-        val distanceY = movement.start.distanceTo(movement.end)
+        val distanceX = movement.start.distanceToX(movement.end)
+        val distanceY = movement.start.distanceToY(movement.end)
         return when {
             distanceX == 0 -> {
                 verticalMovementValidator.isPieceBetween(movement, board)

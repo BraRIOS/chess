@@ -1,13 +1,14 @@
 package model
 
 import kotlin.math.abs
+import kotlin.math.hypot
 
 data class Position(val x: Int, val y: Int) {
     fun distanceTo(end: Position): Int =
-        distanceToX(end) + distanceToY(end)
+        hypot((end.x - x).toDouble(), (end.y - y).toDouble()).toInt()
 
     fun distanceToX(end: Position): Int {
-        return abs(x - end.x)
+        return abs(end.x - x)
     }
 
     fun distanceToY(end: Position): Int {

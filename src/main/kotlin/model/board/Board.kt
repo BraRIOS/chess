@@ -13,7 +13,7 @@ class Board {
     private var positions = mutableMapOf<Position, Optional<Piece>>()
     private lateinit var boardShape: BoardShape
     private lateinit var piecePositionInitializer: PiecePositionInitializer
-    private val movements = mutableListOf<Movement>()
+    private val movementsLog = mutableListOf<Movement>()
 
     fun getBoardShape(): BoardShape {
         return boardShape
@@ -41,12 +41,13 @@ class Board {
 
     fun movePiece(movement: Movement) {
         val piece = positions[movement.start]!!.get()
+        piece.hasMoved = true
         positions[movement.start] = Optional.empty()
         positions[movement.end] = Optional.of(piece)
-        movements.add(movement)
+        movementsLog.add(movement)
     }
 
-    fun getMovements() = movements
+    fun getMovementsLog() = movementsLog
 
     fun getPositions(): MutableMap<Position, Optional<Piece>> {
         return Collections.unmodifiableMap(positions)
@@ -84,16 +85,20 @@ class Board {
         return positions.filter { it.value.isPresent && it.value.get().color != color }.values.map { it.get() }
     }
 
+    fun getAllyPieces(color: Color): List<Piece> {
+        return positions.values.filter { it.isPresent && it.get().color == color }.map { it.get() }
+    }
+
+    fun getAllPieces(): List<Piece> {
+        return positions.values.filter { it.isPresent }.map { it.get() }
+    }
+
     fun clone(): Board {
         val board = Board()
         board.setBoardShape(boardShape)
         board.setPiecePositionInitializer(piecePositionInitializer)
         board.positions = positions.mapValues { Optional.of(it.value.get().clone()) }.toMutableMap()
-        board.movements.addAll(movements)
+        board.movementsLog.addAll(movementsLog)
         return board
-    }
-
-    fun getAllPieces(): List<Piece> {
-        return positions.values.filter { it.isPresent }.map { it.get() }
     }
 }
