@@ -7,6 +7,10 @@ class DistanceMovementValidator(private val limit:Int) : MovementValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean =
         movement.start.distanceTo(movement.end) <= limit
 
+    override fun isPieceBetween(movement: Movement, board: Board): Boolean {
+        return false
+    }
+
     fun validateDistanceX(movement: Movement): Boolean =
         movement.start.distanceToX(movement.end) <= limit
 

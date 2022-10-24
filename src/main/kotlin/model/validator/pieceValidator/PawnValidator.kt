@@ -17,11 +17,6 @@ class PawnValidator : MovementValidator {
         return validatePawnMovement(movement, board) && !isPieceBetween(movement, board)
     }
 
-    override fun getValidMovements(position: Position, board: Board): List<Movement> {
-        TODO("Not yet implemented")
-    }
-
-
     private fun validatePawnMovement(movement: Movement, board: Board): Boolean {
         return validatePawnMovementForward(movement, board) ||
                 validatePawnMovementDiagonal(movement, board) ||
@@ -36,7 +31,8 @@ class PawnValidator : MovementValidator {
 
     private fun validatePawnMovementDiagonal(movement: Movement, board: Board): Boolean {
         return diagonalMovementValidator.validateMovement(movement, board) &&
-                distanceMovementValidator.validateMovement(movement, board)
+                distanceMovementValidator.validateMovement(movement, board) &&
+                board.isOccupiedByDifferentColor(movement)
     }
 
     private fun validatePawnMovementForward(movement: Movement, board: Board): Boolean {

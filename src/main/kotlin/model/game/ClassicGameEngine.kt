@@ -8,6 +8,7 @@ import model.board.Board
 import model.board.boardShapes.ClassicBoardShape
 import model.board.piecePositionInitializer.ClassicPositionInitializer
 import model.enums.Color
+import model.validator.CheckValidator
 import model.validator.ValidatorProvider
 import java.util.*
 
@@ -16,7 +17,7 @@ class ClassicGameEngine : GameEngine {
     private var piecesGUI = listOf<ChessPiece>()
     private val board = Board()
     private val validatorProvider = ValidatorProvider()
-    private val checkValidator = validatorProvider.checkValidator
+    private val checkValidator = CheckValidator()
 
     override fun init(): InitialState {
         board.initBoard(ClassicBoardShape(), ClassicPositionInitializer())
@@ -45,25 +46,18 @@ class ClassicGameEngine : GameEngine {
             return InvalidMove("No piece in (${move.from.row}, ${move.from.column})")
         else if (fromPiece.color != currentPlayerGUI)
             return InvalidMove("Piece does not belong to current player")
-        else if (checkValidator.isCheck(board, color) && fromPiece.pieceId!= "king")
-            return InvalidMove("You are in check and can't uncheck! Move the king to get out of check")
+        else if (checkValidator.isCheck(board, color))
+            if(checkValidator.canUncheck(board, color)){
+                movePiece(move,fromPiece, toPiece)
+                return if (checkValidator.isCheck(board, color))
+                    InvalidMove("You can't move into check")
+                else
+                    NewGameState(piecesGUI, currentPlayerGUI)
+            }
         else if (toPiece != null && toPiece.color == currentPlayerGUI)
             return InvalidMove("You can't capture your own piece in (${move.to.row}, ${move.to.column})")
         else {
-            val piece = board.getPiece(model.Position(move.from.column-1, move.from.row-1))
-            val position = board.getPiecePosition(piece)
-            val newPosition = model.Position(move.to.column-1, move.to.row-1)
-            val validator = validatorProvider.getPieceValidator(piece.type)
-            val movement = Movement(position, newPosition, piece)
-            if (validator.validateMovement(movement, board)) {
-                board.movePiece(movement)
-                piecesGUI = piecesGUI
-                    .filter { it != fromPiece && it != toPiece }
-                    .plus(fromPiece.copy(position = move.to))
-
-                currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
-            }else
-                return InvalidMove("Invalid movement")
+            movePiece(move, fromPiece, toPiece)
 
             //reemplazar por clase de victoria que utilice winValidator y devuelva el tipo de victoria
             if (piecesGUI.size == 1)
@@ -78,5 +72,26 @@ class ClassicGameEngine : GameEngine {
         }
 
         return NewGameState(piecesGUI, currentPlayerGUI)
+    }
+
+    private fun movePiece(
+        move: Move,
+        fromPiece: ChessPiece,
+        toPiece: ChessPiece?
+    ): MoveResult {
+        val piece = board.getPiece(model.Position(move.from.column - 1, move.from.row - 1))
+        val position = board.getPiecePosition(piece)
+        val newPosition = model.Position(move.to.column - 1, move.to.row - 1)
+        val validator = validatorProvider.getPieceValidator(piece.type)
+        val movement = Movement(position, newPosition, piece)
+        if (validator.validateMovement(movement, board)) {
+            board.movePiece(movement)
+            piecesGUI = piecesGUI
+                .filter { it != fromPiece && it != toPiece }
+                .plus(fromPiece.copy(position = move.to))
+
+            currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
+        } else
+            return InvalidMove("Invalid movement")
     }
 }

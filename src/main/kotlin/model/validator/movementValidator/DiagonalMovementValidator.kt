@@ -12,10 +12,6 @@ class DiagonalMovementValidator : MovementValidator {
         return distanceX == distanceY && distanceX != 0 && board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)
     }
 
-    override fun getValidMovements(position: Position, board: Board): List<Movement> {
-        TODO("Not yet implemented")
-    }
-
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
         if(abs(movement.start.x-movement.end.x) == abs(movement.start.y - movement.end.y)) {
             //check the directions

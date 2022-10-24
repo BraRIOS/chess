@@ -13,10 +13,6 @@ class BishopValidator : MovementValidator {
                 !isPieceBetween(movement, board)
     }
 
-    override fun getValidMovements(position: Position, board: Board): List<Movement> {
-        TODO("Not yet implemented")
-    }
-
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
         return diagonalMovementValidator.isPieceBetween(movement, board)
     }

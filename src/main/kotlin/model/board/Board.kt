@@ -61,6 +61,10 @@ class Board {
         return positions[movement.end]!!.isPresent && positions[movement.end]!!.get().color == movement.piece.color
     }
 
+    fun isOccupiedByDifferentColor(movement: Movement): Boolean {
+        return positions[movement.end]!!.isPresent && positions[movement.end]!!.get().color != movement.piece.color
+    }
+
     fun isOccupied(position: Position): Boolean {
         return positions[position]!!.isPresent
     }
@@ -101,4 +105,5 @@ class Board {
         board.movementsLog.addAll(movementsLog)
         return board
     }
+
 }

@@ -17,10 +17,6 @@ class RookValidator: MovementValidator {
                 horizontalMovementValidator.validateMovement(movement, board))
     }
 
-    override fun getValidMovements(position: Position, board: Board): List<Movement> {
-        TODO("Not yet implemented")
-    }
-
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
         val distanceX = movement.start.distanceTo(movement.end)
         val distanceY = movement.start.distanceTo(movement.end)

@@ -8,10 +8,6 @@ class HorizontalMovementValidator : MovementValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean =
         movement.start.y == movement.end.y && movement.start.x != movement.end.x && board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)
 
-    override fun getValidMovements(position: Position, board: Board): List<Movement> {
-        TODO("Not yet implemented")
-    }
-
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
         val directionX = if (movement.end.x < movement.start.x)
             -1

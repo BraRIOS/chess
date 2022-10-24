@@ -17,10 +17,6 @@ class KnightValidator : MovementValidator {
                 board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)
     }
 
-    override fun getValidMovements(position: Position, board: Board): List<Movement> {
-        TODO()
-    }
-
     override fun isPieceBetween(movement: Movement, board: Board): Boolean {
         return false
     }
