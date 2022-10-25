@@ -8,7 +8,8 @@ class DefaultCaptureValidator : CaptureValidator {
     private val validatorProvider = ValidatorProvider()
     override fun validateCapture(movement: Movement, board: Board): Boolean {
         val pieceToCapture = board.getPositions()[movement.end]
-        return pieceToCapture!!.isPresent && pieceToCapture.get().color != movement.piece.color &&
-                validatorProvider.getPieceValidator(movement.piece.type).validateMovement(movement, board)
+        val validMove = validatorProvider.getPieceValidator(movement.piece.type)
+            .validateMovement(movement, board)
+        return pieceToCapture!!.isPresent && pieceToCapture.get().color != movement.piece.color && validMove
     }
 }

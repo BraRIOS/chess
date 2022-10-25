@@ -7,13 +7,15 @@ import model.board.boardShapes.BoardShape
 import model.board.piecePositionInitializer.PiecePositionInitializer
 import model.enums.Color
 import model.enums.PieceType
+import model.validator.captureValidator.CaptureValidator
 import java.util.*
 
 class Board {
     private var positions = mutableMapOf<Position, Optional<Piece>>()
     private lateinit var boardShape: BoardShape
     private lateinit var piecePositionInitializer: PiecePositionInitializer
-    private val movementsLog = mutableListOf<Movement>()
+    private lateinit var captureValidator: CaptureValidator
+    private val movementsLog = mutableListOf<(Pair<Movement, Optional<Piece>>)>()
 
     fun getBoardShape(): BoardShape {
         return boardShape
@@ -33,18 +35,38 @@ class Board {
         piecePositionInitializer.initializePieces(positions)
     }
 
-    fun initBoard(boardShape: BoardShape, piecePositionInitializer: PiecePositionInitializer) {
+    private fun setCaptureValidator(captureValidator: CaptureValidator) {
+        this.captureValidator = captureValidator
+    }
+
+    fun setBoard(boardShape: BoardShape, piecePositionInitializer: PiecePositionInitializer, captureValidator: CaptureValidator) {
         setBoardShape(boardShape)
         setPiecePositionInitializer(piecePositionInitializer)
+        setCaptureValidator(captureValidator)
         if (positions.keys.any { !boardShape.isInside(it) }) throw Exception("La forma del tablero no es compatible con la posición de las piezas")
     }
 
     fun movePiece(movement: Movement) {
-        val piece = positions[movement.start]!!.get()
+        val piece = movement.piece
         piece.hasMoved = true
         positions[movement.start] = Optional.empty()
-        positions[movement.end] = Optional.of(piece)
-        movementsLog.add(movement)
+        if (captureValidator.validateCapture(movement, this)) {
+            val capturedPiece = positions[movement.end]!!.get()
+            positions[movement.end] = Optional.of(piece)
+            movementsLog.add(Pair(movement, Optional.of(capturedPiece)))
+        } else {
+            positions[movement.end] = Optional.of(piece)
+            movementsLog.add(Pair(movement, Optional.empty()))
+        }
+    }
+
+    fun undoLastMovement() {
+        val lastMovement = movementsLog.last()
+        val piece = lastMovement.first.piece
+        positions[lastMovement.first.start] = Optional.of(piece)
+        positions[lastMovement.first.end] = lastMovement.second
+        movementsLog.remove(lastMovement)
+        piece.hasMoved = movementsLog.any { it.first.piece == piece }
     }
 
     fun getMovementsLog() = movementsLog
@@ -101,7 +123,8 @@ class Board {
         val board = Board()
         board.setBoardShape(boardShape)
         board.setPiecePositionInitializer(piecePositionInitializer)
-        board.positions = positions.mapValues { Optional.of(it.value.get().clone()) }.toMutableMap()
+        board.positions = positions.mapValues {
+            if (it.value.isPresent) Optional.of( it.value.get().clone()) else Optional.empty() }.toMutableMap()
         board.movementsLog.addAll(movementsLog)
         return board
     }

@@ -1,7 +1,6 @@
 package model.validator.pieceValidator
 
 import model.Movement
-import model.Position
 import model.board.Board
 import model.validator.movementValidator.HorizontalMovementValidator
 import model.validator.movementValidator.MovementValidator
@@ -18,8 +17,8 @@ class RookValidator: MovementValidator {
     }
 
     override fun isPieceBetween(movement: Movement, board: Board): Boolean{
-        val distanceX = movement.start.distanceTo(movement.end)
-        val distanceY = movement.start.distanceTo(movement.end)
+        val distanceX = movement.start.distanceToX(movement.end)
+        val distanceY = movement.start.distanceToY(movement.end)
         return when {
             distanceX == 0 -> {
                 verticalMovementValidator.isPieceBetween(movement, board)
