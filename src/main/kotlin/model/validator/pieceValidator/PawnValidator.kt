@@ -1,7 +1,6 @@
 package model.validator.pieceValidator
 
 import model.Movement
-import model.Position
 import model.board.Board
 import model.enums.Color
 import model.validator.movementValidator.DiagonalMovementValidator
