@@ -1,3 +1,0 @@
-package model.validator.specialMovementValidator
-
-class EnpassantValidator

@@ -43,22 +43,17 @@ class ClassicGameEngine : GameEngine {
         val toPiece = piecesGUI.find { it.position == move.to }
         val color = if (currentPlayerGUI == WHITE) Color.WHITE else Color.BLACK
 
-        if (fromPiece == null)
-            return InvalidMove("No piece in (${move.from.row}, ${move.from.column})")
+        return if (checkValidator.isCheck(board, color) && !checkValidator.canUncheck(board, color)){
+            val winner = if (currentPlayerGUI == WHITE) BLACK else WHITE
+            GameOver(winner)
+        } else if (fromPiece == null)
+            InvalidMove("No piece in (${move.from.row}, ${move.from.column})")
         else if (fromPiece.color != currentPlayerGUI)
-            return InvalidMove("Piece does not belong to current player")
+            InvalidMove("Piece does not belong to current player")
         else if (toPiece != null && toPiece.color == currentPlayerGUI)
-            return InvalidMove("You can't capture your own piece in (${move.to.row}, ${move.to.column})")
-        else if (checkValidator.isCheck(board, color))
-            return if(checkValidator.canUncheck(board, color)){
-                return movePiece(move,fromPiece, toPiece, color)
-            } else {
-                val winner = if (currentPlayerGUI == WHITE) BLACK else WHITE
-                GameOver(winner)
-            }
-        else {
-            return movePiece(move,fromPiece, toPiece, color)
-        }
+            InvalidMove("You can't capture your own piece in (${move.to.row}, ${move.to.column})")
+        else
+            movePiece(move,fromPiece, toPiece, color)
     }
     private fun movePiece(
         move: Move,
