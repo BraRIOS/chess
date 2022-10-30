@@ -14,4 +14,8 @@ data class Piece(val color: Color, val type: PieceType, val initialPosition: Pos
         piece.hasMoved = hasMoved
         return piece
     }
+
+    fun promote(): Piece {
+        return Piece(color, PieceType.QUEEN, initialPosition)
+    }
 }

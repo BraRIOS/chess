@@ -11,6 +11,7 @@ import model.enums.Color
 import model.validator.CheckValidator
 import model.validator.ValidatorProvider
 import model.validator.captureValidator.DefaultCaptureValidator
+import model.validator.specialMovementValidator.PromotionValidator
 import java.util.*
 
 class ClassicGameEngine : GameEngine {
@@ -19,6 +20,7 @@ class ClassicGameEngine : GameEngine {
     private val board = Board()
     private val validatorProvider = ValidatorProvider()
     private val checkValidator = CheckValidator()
+    private val promotionValidator = PromotionValidator()
 
     override fun init(): InitialState {
         board.setBoard(ClassicBoardShape(), ClassicPositionInitializer(), DefaultCaptureValidator())
@@ -43,19 +45,16 @@ class ClassicGameEngine : GameEngine {
         val toPiece = piecesGUI.find { it.position == move.to }
         val color = if (currentPlayerGUI == WHITE) Color.WHITE else Color.BLACK
 
-        return if (checkValidator.isCheck(board, color) && !checkValidator.canUncheck(board, color)){
-            val winner = if (currentPlayerGUI == WHITE) BLACK else WHITE
-            GameOver(winner)
-        } else if (fromPiece == null)
+        return if (fromPiece == null)
             InvalidMove("No piece in (${move.from.row}, ${move.from.column})")
         else if (fromPiece.color != currentPlayerGUI)
             InvalidMove("Piece does not belong to current player")
         else if (toPiece != null && toPiece.color == currentPlayerGUI)
             InvalidMove("You can't capture your own piece in (${move.to.row}, ${move.to.column})")
         else
-            movePiece(move,fromPiece, toPiece, color)
+            movePieceAndReturnResult(move,fromPiece, toPiece, color)
     }
-    private fun movePiece(
+    private fun movePieceAndReturnResult(
         move: Move,
         fromPiece: ChessPiece,
         toPiece: ChessPiece?,
@@ -78,14 +77,22 @@ class ClassicGameEngine : GameEngine {
                 .filter { it != fromPiece && it != toPiece }
                 .plus(fromPiece.copy(position = move.to))
 
-            currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
-
-            piecesGUI = piecesGUI.map {
-                if ((it.color == WHITE && it.position.row == 8) || it.color == BLACK && it.position.row == 1)
-                    it.copy(pieceId = "queen")
-                else
-                    it
+            if (promotionValidator.canPromote(board, movement)) {
+                board.promotePiece(piece)
+                piecesGUI = piecesGUI.map {
+                    if (it.id == piece.initialPosition.toString())
+                        it.copy(pieceId = "queen")
+                    else
+                        it
+                }
             }
+
+            val opponentColor = if (color == Color.WHITE) Color.BLACK else Color.WHITE
+            //reemplazar por win validator con win conditions
+            if (checkValidator.isCheck(board, opponentColor) && !checkValidator.canUncheck(board, opponentColor)){
+                return GameOver(currentPlayerGUI)
+            }
+            currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
             return NewGameState(piecesGUI, currentPlayerGUI)
         }
         else

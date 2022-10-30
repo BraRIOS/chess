@@ -2,6 +2,7 @@ package model.board.boardShapes
 
 import model.Piece
 import model.Position
+import model.enums.Color
 import java.util.*
 
 class SquareShapedBoard(private val limit: Int) : BoardShape, Squared {
@@ -9,7 +10,15 @@ class SquareShapedBoard(private val limit: Int) : BoardShape, Squared {
         return position.x in 0..limit && position.y in 0..limit
     }
 
-    override fun getBoardShape(): MutableMap<Position, Optional<Piece>> {
+    override fun isInLastRows(position: Position, color: Color): Boolean {
+        return if (color == Color.WHITE) {
+            position.y == limit
+        } else {
+            position.y == 0
+        }
+    }
+
+    override fun getShape(): MutableMap<Position, Optional<Piece>> {
         val boardShape: MutableMap<Position, Optional<Piece>> = mutableMapOf()
         for (x in 0..limit) {
             for (y in 0..limit) {

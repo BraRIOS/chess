@@ -27,7 +27,7 @@ class Board {
 
     private fun setBoardShape(boardShape: BoardShape) {
         this.boardShape = boardShape
-        positions = boardShape.getBoardShape()
+        positions = boardShape.getShape()
     }
 
     private fun setPiecePositionInitializer(piecePositionInitializer: PiecePositionInitializer) {
@@ -127,6 +127,11 @@ class Board {
             if (it.value.isPresent) Optional.of( it.value.get().clone()) else Optional.empty() }.toMutableMap()
         board.movementsLog.addAll(movementsLog)
         return board
+    }
+
+    fun promotePiece(piece: Piece) {
+        val position = getPiecePosition(piece)
+        positions[position] = Optional.of(piece.promote())
     }
 
 }
