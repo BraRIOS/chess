@@ -12,6 +12,8 @@ import model.validator.CheckValidator
 import model.validator.ValidatorProvider
 import model.validator.captureValidator.DefaultCaptureValidator
 import model.validator.specialMovementValidator.PromotionValidator
+import model.validator.winValidation.CheckMateCondition
+import model.validator.winValidation.WinValidator
 import java.util.*
 
 class ClassicGameEngine : GameEngine {
@@ -20,12 +22,13 @@ class ClassicGameEngine : GameEngine {
     private val board = Board()
     private val validatorProvider = ValidatorProvider()
     private val checkValidator = CheckValidator()
+    private lateinit var winValidator:WinValidator
     private val promotionValidator = PromotionValidator()
 
     override fun init(): InitialState {
+        winValidator = WinValidator(listOf(CheckMateCondition()))
         board.setBoard(ClassicBoardShape(), ClassicPositionInitializer(), DefaultCaptureValidator())
         val pieces = board.getAllPieces()
-
         pieces.forEach { piece ->
             val position = board.getPiecePosition(piece)
             val color = if (piece.color == Color.WHITE) WHITE else BLACK
@@ -89,7 +92,7 @@ class ClassicGameEngine : GameEngine {
 
             val opponentColor = if (color == Color.WHITE) Color.BLACK else Color.WHITE
             //reemplazar por win validator con win conditions
-            if (checkValidator.isCheck(board, opponentColor) && !checkValidator.canUncheck(board, opponentColor)){
+            if (winValidator.isWin(board, opponentColor)) {
                 return GameOver(currentPlayerGUI)
             }
             currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
