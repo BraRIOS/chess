@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import model.enums.Color
 
-class ModelToGUI {
+class ModelGUITranslator {
     fun fromPieceToChessPiece(piece: model.Piece, position: model.Position): ChessPiece {
         val color = fromColorToPlayerColor(piece.color)
         val positionGUI = fromPositionToPositionGUI(position)
@@ -22,5 +22,9 @@ class ModelToGUI {
 
     fun fromPositionToPositionGUI(position: model.Position): Position {
         return Position(position.y + 1, position.x + 1)
+    }
+
+    fun fromPositionGUItoPosition(positionGUI: Position): model.Position {
+        return model.Position(positionGUI.column - 1, positionGUI.row - 1)
     }
 }

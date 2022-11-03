@@ -51,23 +51,4 @@ class CastlingValidator{
         }
         return true
     }
-
-    fun castlingWithRook(pieceStart: Piece, board: Board, pieceEnd: Piece) {
-        val rookPosition = board.getPiecePosition(pieceEnd)
-        val kingPosition = board.getPiecePosition(pieceStart)
-        val rookMovement = Movement(rookPosition, rookPosition, pieceEnd)
-        val kingMovement = Movement(kingPosition, kingPosition, pieceStart)
-        when {
-            kingPosition.x < rookPosition.x -> {
-                kingMovement.end = Position(kingPosition.x + 2, kingPosition.y)
-                rookMovement.end = Position(kingMovement.end.x - 1, rookPosition.y)
-            }
-            else -> {
-                kingMovement.end = Position(kingPosition.x - 2, kingPosition.y)
-                rookMovement.end = Position(kingMovement.end.x + 1, rookPosition.y)
-            }
-        }
-        board.movePiece(kingMovement)
-        board.movePiece(rookMovement)
-    }
 }

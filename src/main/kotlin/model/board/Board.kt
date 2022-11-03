@@ -13,7 +13,7 @@ import java.util.*
 class Board {
     private var positions = mutableMapOf<Position, Optional<Piece>>()
     private lateinit var boardShape: BoardShape
-    private lateinit var piecePositionInitializer: PiecePositionInitializer
+    private var piecePositionInitializer: PiecePositionInitializer? = null
     private lateinit var captureValidator: CaptureValidator
     private val movementsLog = mutableListOf<(Pair<Movement, Optional<Piece>>)>()
 
@@ -21,7 +21,7 @@ class Board {
         return boardShape
     }
 
-    fun getPiecePositionInitializer(): PiecePositionInitializer {
+    fun getPiecePositionInitializer(): PiecePositionInitializer? {
         return piecePositionInitializer
     }
 
@@ -39,9 +39,9 @@ class Board {
         this.captureValidator = captureValidator
     }
 
-    fun setBoard(boardShape: BoardShape, piecePositionInitializer: PiecePositionInitializer, captureValidator: CaptureValidator) {
+    fun setBoard(boardShape: BoardShape, piecePositionInitializer: PiecePositionInitializer?, captureValidator: CaptureValidator) {
         setBoardShape(boardShape)
-        setPiecePositionInitializer(piecePositionInitializer)
+        if (piecePositionInitializer != null ) setPiecePositionInitializer(piecePositionInitializer)
         setCaptureValidator(captureValidator)
         if (positions.keys.any { !boardShape.isInside(it) }) throw Exception("La forma del tablero no es compatible con la posición de las piezas")
     }
@@ -133,4 +133,23 @@ class Board {
         positions[position] = Optional.of(piece.promote())
     }
 
+    fun castlingWithRook(king: Piece, board: Board, rook: Piece) {
+        val rookPosition = board.getPiecePosition(rook)
+        val kingPosition = board.getPiecePosition(king)
+        val rookMovement = Movement(rookPosition, rookPosition, rook)
+        val kingMovement = Movement(kingPosition, kingPosition, king)
+        when {
+            kingPosition.x < rookPosition.x -> {
+                kingMovement.end = Position(kingPosition.x + 2, kingPosition.y)
+                rookMovement.end = Position(kingMovement.end.x - 1, rookPosition.y)
+            }
+
+            else -> {
+                kingMovement.end = Position(kingPosition.x - 2, kingPosition.y)
+                rookMovement.end = Position(kingMovement.end.x + 1, rookPosition.y)
+            }
+        }
+        board.movePiece(kingMovement)
+        board.movePiece(rookMovement)
+    }
 }

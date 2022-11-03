@@ -25,7 +25,7 @@ class ClassicGameEngine : GameEngine {
     private lateinit var winValidator:WinValidator
     private val promotionValidator = PromotionValidator()
     private val castlingValidator = CastlingValidator()
-    private val modelToGUI = ModelToGUI()
+    private val modelGUITranslator = ModelGUITranslator()
 
     override fun init(): InitialState {
         winValidator = WinValidator(listOf(CheckMateCondition()))
@@ -33,7 +33,7 @@ class ClassicGameEngine : GameEngine {
         val pieces = board.getAllPieces()
         pieces.forEach { piece ->
             val position = board.getPiecePosition(piece)
-            val chessPiece =  modelToGUI.fromPieceToChessPiece(piece, position)
+            val chessPiece =  modelGUITranslator.fromPieceToChessPiece(piece, position)
             piecesGUI = piecesGUI.plus(chessPiece)
         }
         val size = (board.getBoardShape() as ClassicBoardShape).getLimit()
@@ -62,21 +62,21 @@ class ClassicGameEngine : GameEngine {
         toPiece: ChessPiece?,
         color: Color
     ): MoveResult {
-        val piece = board.getPiece(model.Position(move.from.column - 1, move.from.row - 1))!!
-        val pieceEnd = board.getPiece(model.Position(move.to.column - 1, move.to.row - 1))
+        val piece = board.getPiece(modelGUITranslator.fromPositionGUItoPosition(move.from))!!
+        val pieceEnd = board.getPiece(modelGUITranslator.fromPositionGUItoPosition(move.to))
         val position = board.getPiecePosition(piece)
-        var newPosition = model.Position(move.to.column - 1, move.to.row - 1)
+        var newPosition = modelGUITranslator.fromPositionGUItoPosition(move.to)
         val validator = validatorProvider.getPieceValidator(piece.type)
         val movement = Movement(position, newPosition, piece)
 
         if(pieceEnd != null && castlingValidator.canCastlingWithRook(board, piece, pieceEnd)) {
-            castlingValidator.castlingWithRook(piece, board, pieceEnd)
+            board.castlingWithRook(piece, board, pieceEnd)
             newPosition = board.getPiecePosition(piece)
             val rookPosition = board.getPiecePosition(pieceEnd)
             piecesGUI = piecesGUI
                 .filter { it != fromPiece && it != toPiece }
-                .plus(fromPiece.copy(position = modelToGUI.fromPositionToPositionGUI(newPosition)))
-                .plus(toPiece!!.copy(position = modelToGUI.fromPositionToPositionGUI(rookPosition)))
+                .plus(fromPiece.copy(position = modelGUITranslator.fromPositionToPositionGUI(newPosition)))
+                .plus(toPiece!!.copy(position = modelGUITranslator.fromPositionToPositionGUI(rookPosition)))
             currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
             return NewGameState(piecesGUI, currentPlayerGUI)
         }
