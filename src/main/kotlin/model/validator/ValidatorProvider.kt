@@ -22,7 +22,7 @@ class ValidatorProvider {
     fun getValidMovements(initialPosition: Position, board: Board): List<Movement> {
         val positions = board.getPositions().keys
         val piece = board.getPiece(initialPosition)
-        val pieceValidator = getPieceValidator(piece.type)
+        val pieceValidator = getPieceValidator(piece!!.type)
         return positions.filter {
             pieceValidator.validateMovement(Movement(initialPosition,it, piece),board)
         }.map { Movement(initialPosition, it, piece) }
