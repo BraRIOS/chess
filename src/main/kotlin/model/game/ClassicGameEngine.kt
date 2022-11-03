@@ -8,7 +8,6 @@ import model.board.Board
 import model.board.boardShapes.ClassicBoardShape
 import model.board.piecePositionInitializer.ClassicPositionInitializer
 import model.enums.Color
-import model.enums.PieceType
 import model.validator.CheckValidator
 import model.validator.ValidatorProvider
 import model.validator.captureValidator.DefaultCaptureValidator
@@ -16,7 +15,6 @@ import model.validator.specialMovementValidator.CastlingValidator
 import model.validator.specialMovementValidator.PromotionValidator
 import model.validator.winValidation.CheckMateCondition
 import model.validator.winValidation.WinValidator
-import java.util.*
 
 class ClassicGameEngine : GameEngine {
     private var currentPlayerGUI = WHITE
@@ -27,6 +25,7 @@ class ClassicGameEngine : GameEngine {
     private lateinit var winValidator:WinValidator
     private val promotionValidator = PromotionValidator()
     private val castlingValidator = CastlingValidator()
+    private val modelToGUI = ModelToGUI()
 
     override fun init(): InitialState {
         winValidator = WinValidator(listOf(CheckMateCondition()))
@@ -34,10 +33,7 @@ class ClassicGameEngine : GameEngine {
         val pieces = board.getAllPieces()
         pieces.forEach { piece ->
             val position = board.getPiecePosition(piece)
-            val color = if (piece.color == Color.WHITE) WHITE else BLACK
-            val positionGUI = Position(position.y+1, position.x+1)
-            val chessPiece =  ChessPiece(piece.initialPosition.toString(), color, positionGUI,
-                piece.type.name.lowercase(Locale.getDefault()))
+            val chessPiece =  modelToGUI.fromPieceToChessPiece(piece, position)
             piecesGUI = piecesGUI.plus(chessPiece)
         }
         val size = (board.getBoardShape() as ClassicBoardShape).getLimit()
@@ -55,7 +51,7 @@ class ClassicGameEngine : GameEngine {
             InvalidMove("No piece in (${move.from.row}, ${move.from.column})")
         else if (fromPiece.color != currentPlayerGUI)
             InvalidMove("Piece does not belong to current player")
-        else if (toPiece != null && toPiece.color == currentPlayerGUI)
+        else if (toPiece != null && toPiece.color == currentPlayerGUI && fromPiece.pieceId != "king" && toPiece.pieceId != "rook")
             InvalidMove("You can't capture your own piece in (${move.to.row}, ${move.to.column})")
         else
             movePieceAndReturnResult(move,fromPiece, toPiece, color)
@@ -69,14 +65,23 @@ class ClassicGameEngine : GameEngine {
         val piece = board.getPiece(model.Position(move.from.column - 1, move.from.row - 1))!!
         val pieceEnd = board.getPiece(model.Position(move.to.column - 1, move.to.row - 1))
         val position = board.getPiecePosition(piece)
-        val newPosition = model.Position(move.to.column - 1, move.to.row - 1)
+        var newPosition = model.Position(move.to.column - 1, move.to.row - 1)
         val validator = validatorProvider.getPieceValidator(piece.type)
         val movement = Movement(position, newPosition, piece)
-        if (validator.validateMovement(movement, board)) {
-            if(pieceEnd != null && pieceEnd.type == PieceType.ROOK && piece.type == PieceType.KING &&
-                castlingValidator.canCastlingWithRook(movement, board, pieceEnd)){
 
-            }
+        if(pieceEnd != null && castlingValidator.canCastlingWithRook(board, piece, pieceEnd)) {
+            castlingValidator.castlingWithRook(piece, board, pieceEnd)
+            newPosition = board.getPiecePosition(piece)
+            val rookPosition = board.getPiecePosition(pieceEnd)
+            piecesGUI = piecesGUI
+                .filter { it != fromPiece && it != toPiece }
+                .plus(fromPiece.copy(position = modelToGUI.fromPositionToPositionGUI(newPosition)))
+                .plus(toPiece!!.copy(position = modelToGUI.fromPositionToPositionGUI(rookPosition)))
+            currentPlayerGUI = if (currentPlayerGUI == WHITE) BLACK else WHITE
+            return NewGameState(piecesGUI, currentPlayerGUI)
+        }
+        else if (validator.validateMovement(movement, board)) {
+
             board.movePiece(movement)
 
             if (checkValidator.isCheck(board, color)){
@@ -99,7 +104,7 @@ class ClassicGameEngine : GameEngine {
             }
 
             val opponentColor = if (color == Color.WHITE) Color.BLACK else Color.WHITE
-            //reemplazar por win validator con win conditions
+
             if (winValidator.isWin(board, opponentColor)) {
                 return GameOver(currentPlayerGUI)
             }

@@ -100,7 +100,7 @@ class Board {
     }
 
     fun getPiece(position: Position): Piece? {
-        return positions[position]?.get()
+        return positions[position]?.orElse(null)
     }
 
     fun getPiece(pieceType: PieceType, color: Color): Piece {
@@ -121,8 +121,7 @@ class Board {
 
     fun clone(): Board {
         val board = Board()
-        board.setBoardShape(boardShape)
-        board.setPiecePositionInitializer(piecePositionInitializer)
+        board.setBoard(boardShape, piecePositionInitializer, captureValidator)
         board.positions = positions.mapValues {
             if (it.value.isPresent) Optional.of( it.value.get().clone()) else Optional.empty() }.toMutableMap()
         board.movementsLog.addAll(movementsLog)

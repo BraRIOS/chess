@@ -15,10 +15,10 @@ class CastlingValidator{
     private val checkValidator = CheckValidator()
     private val kingValidator = KingValidator()
 
-    fun canCastlingWithRook(board: Board, rook: Piece): Boolean {
+    fun canCastlingWithRook(board: Board, king: Piece, rook: Piece): Boolean {
         val color = rook.color
-        val king = board.getPiece(PieceType.KING, color)
-        return king.hasMoved.not() && !checkValidator.isCheck(board, color) && !isCastlingThroughCheck(board, color, rook)
+        return king.type == PieceType.KING && rook.type == PieceType.ROOK && king.hasMoved.not() &&
+                !checkValidator.isCheck(board, color) && !isCastlingThroughCheck(board, color, rook)
     }
 
     private fun isCastlingThroughCheck(board: Board, color: Color, rook: Piece): Boolean {
@@ -43,12 +43,31 @@ class CastlingValidator{
     }
 
     private fun isCastlingThroughCheck(board: Board, kingMovement: Movement, rookMovement: Movement, color: Color): Boolean {
-        if (kingValidator.validateMovement(kingMovement, board) && rookValidator.validateMovement(rookMovement, board)) {
+        if (!kingValidator.isPieceBetween(kingMovement, board) && !rookValidator.isPieceBetween(rookMovement, board)) {
             val newBoard = board.clone()
             newBoard.movePiece(kingMovement)
             newBoard.movePiece(rookMovement)
             return checkValidator.isCheck(newBoard, color)
         }
         return true
+    }
+
+    fun castlingWithRook(pieceStart: Piece, board: Board, pieceEnd: Piece) {
+        val rookPosition = board.getPiecePosition(pieceEnd)
+        val kingPosition = board.getPiecePosition(pieceStart)
+        val rookMovement = Movement(rookPosition, rookPosition, pieceEnd)
+        val kingMovement = Movement(kingPosition, kingPosition, pieceStart)
+        when {
+            kingPosition.x < rookPosition.x -> {
+                kingMovement.end = Position(kingPosition.x + 2, kingPosition.y)
+                rookMovement.end = Position(kingMovement.end.x - 1, rookPosition.y)
+            }
+            else -> {
+                kingMovement.end = Position(kingPosition.x - 2, kingPosition.y)
+                rookMovement.end = Position(kingMovement.end.x + 1, rookPosition.y)
+            }
+        }
+        board.movePiece(kingMovement)
+        board.movePiece(rookMovement)
     }
 }
