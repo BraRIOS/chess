@@ -5,8 +5,8 @@ import edu.austral.dissis.chess.gui.PlayerColor.BLACK
 import edu.austral.dissis.chess.gui.PlayerColor.WHITE
 import model.Movement
 import model.board.Board
-import model.board.boardShapes.ClassicBoardShape
-import model.board.piecePositionInitializer.ClassicPositionInitializer
+import model.board.boardShapes.CapablancaBoardShape
+import model.board.piecePositionInitializer.CapablancaPositionInitializer
 import model.enums.Color
 import model.validator.CheckValidator
 import model.validator.ValidatorProvider
@@ -16,7 +16,7 @@ import model.validator.specialMovementValidator.PromotionValidator
 import model.validator.winValidation.CheckMateCondition
 import model.validator.winValidation.WinValidator
 
-class ClassicGameEngine : GameEngine {
+class CapaBlancaGameEngine : GameEngine {
     private var currentPlayerGUI = WHITE
     private var piecesGUI = listOf<ChessPiece>()
     private val board = Board()
@@ -29,10 +29,10 @@ class ClassicGameEngine : GameEngine {
 
     override fun init(): InitialState {
         winValidator = WinValidator(listOf(CheckMateCondition()))
-        board.setBoard(ClassicBoardShape(), ClassicPositionInitializer(), DefaultCaptureValidator())
+        board.setBoard(CapablancaBoardShape(), CapablancaPositionInitializer(), DefaultCaptureValidator())
         piecesGUI = modelGUITranslator.fromBoardPiecesToChessPieces(board)
-        val length = (board.getBoardShape() as ClassicBoardShape).getLength()
-        val width = (board.getBoardShape() as ClassicBoardShape).getWidth()
+        val length = (board.getBoardShape() as CapablancaBoardShape).getLength()
+        val width = (board.getBoardShape() as CapablancaBoardShape).getWidth()
         val boardSize = BoardSize(width+1, length+1)
 
         return InitialState(boardSize, piecesGUI, WHITE)

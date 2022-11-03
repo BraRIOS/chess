@@ -5,14 +5,14 @@ import model.Position
 import model.enums.Color
 import java.util.*
 
-class SquareShapedBoard(private val limit: Int) : BoardShape {
+class RectangularShapedBoard(private val width:Int, private val length:Int): BoardShape{
     override fun isInside(position: Position): Boolean {
-        return position.x in 0..limit && position.y in 0..limit
+        return position.x in 0..width && position.y in 0..length
     }
 
     override fun isInLastRows(position: Position, color: Color): Boolean {
         return if (color == Color.WHITE) {
-            position.y == limit
+            position.y == length
         } else {
             position.y == 0
         }
@@ -20,15 +20,15 @@ class SquareShapedBoard(private val limit: Int) : BoardShape {
 
     override fun getShape(): MutableMap<Position, Optional<Piece>> {
         val boardShape: MutableMap<Position, Optional<Piece>> = mutableMapOf()
-        for (x in 0..limit) {
-            for (y in 0..limit) {
+        for (x in 0..width) {
+            for (y in 0..length) {
                 boardShape[Position(x, y)] = Optional.empty()
             }
         }
         return boardShape
     }
 
-    override fun getLength(): Int = limit
+    override fun getLength(): Int = length
 
-    override fun getWidth(): Int = limit
+    override fun getWidth(): Int = width
 }

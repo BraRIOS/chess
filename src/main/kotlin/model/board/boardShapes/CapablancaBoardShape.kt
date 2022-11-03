@@ -5,21 +5,21 @@ import model.Position
 import model.enums.Color
 import java.util.*
 
-class ClassicBoardShape : BoardShape {
-    private val squareShapedBoard = SquareShapedBoard(7)
+class CapablancaBoardShape : BoardShape {
+    private val rectangularShapedBoard = RectangularShapedBoard(9, 7)
 
     override fun isInside(position: Position): Boolean =
-        squareShapedBoard.isInside(position)
+        rectangularShapedBoard.isInside(position)
 
     override fun isInLastRows(position: Position, color: Color): Boolean =
-        squareShapedBoard.isInLastRows(position, color)
+        rectangularShapedBoard.isInLastRows(position, color)
 
     override fun getShape(): MutableMap<Position, Optional<Piece>> =
-        squareShapedBoard.getShape()
+        rectangularShapedBoard.getShape()
 
     override fun getWidth(): Int =
-        squareShapedBoard.getWidth()
+        rectangularShapedBoard.getWidth()
 
     override fun getLength(): Int =
-        squareShapedBoard.getLength()
+        rectangularShapedBoard.getLength()
 }

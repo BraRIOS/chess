@@ -8,7 +8,7 @@ import javafx.application.Application
 import javafx.application.Application.launch
 import javafx.scene.Scene
 import javafx.stage.Stage
-import model.game.ClassicGameEngine
+import model.game.CapaBlancaGameEngine
 
 
 fun main() {
@@ -16,7 +16,7 @@ fun main() {
 }
 
 class ChessGameApplication : Application() {
-    private val gameEngine = ClassicGameEngine()
+    private val gameEngine = CapaBlancaGameEngine()
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     companion object {
