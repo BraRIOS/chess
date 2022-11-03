@@ -16,6 +16,8 @@ class ValidatorProvider {
             PieceType.BISHOP -> BishopValidator()
             PieceType.QUEEN -> QueenValidator()
             PieceType.KING -> KingValidator()
+            PieceType.ARCHBISHOP -> ArchbishopValidator()
+            PieceType.CHANCELLOR -> ChancellorValidator()
         }
     }
 
