@@ -8,9 +8,11 @@ import model.board.Board
 import model.board.boardShapes.ClassicBoardShape
 import model.board.piecePositionInitializer.ClassicPositionInitializer
 import model.enums.Color
+import model.enums.PieceType
 import model.validator.CheckValidator
 import model.validator.ValidatorProvider
 import model.validator.captureValidator.DefaultCaptureValidator
+import model.validator.specialMovementValidator.CastlingValidator
 import model.validator.specialMovementValidator.PromotionValidator
 import model.validator.winValidation.CheckMateCondition
 import model.validator.winValidation.WinValidator
@@ -24,6 +26,7 @@ class ClassicGameEngine : GameEngine {
     private val checkValidator = CheckValidator()
     private lateinit var winValidator:WinValidator
     private val promotionValidator = PromotionValidator()
+    private val castlingValidator = CastlingValidator()
 
     override fun init(): InitialState {
         winValidator = WinValidator(listOf(CheckMateCondition()))
@@ -63,12 +66,17 @@ class ClassicGameEngine : GameEngine {
         toPiece: ChessPiece?,
         color: Color
     ): MoveResult {
-        val piece = board.getPiece(model.Position(move.from.column - 1, move.from.row - 1))
+        val piece = board.getPiece(model.Position(move.from.column - 1, move.from.row - 1))!!
+        val pieceEnd = board.getPiece(model.Position(move.to.column - 1, move.to.row - 1))
         val position = board.getPiecePosition(piece)
         val newPosition = model.Position(move.to.column - 1, move.to.row - 1)
         val validator = validatorProvider.getPieceValidator(piece.type)
         val movement = Movement(position, newPosition, piece)
         if (validator.validateMovement(movement, board)) {
+            if(pieceEnd != null && pieceEnd.type == PieceType.ROOK && piece.type == PieceType.KING &&
+                castlingValidator.canCastlingWithRook(movement, board, pieceEnd)){
+
+            }
             board.movePiece(movement)
 
             if (checkValidator.isCheck(board, color)){
@@ -80,7 +88,7 @@ class ClassicGameEngine : GameEngine {
                 .filter { it != fromPiece && it != toPiece }
                 .plus(fromPiece.copy(position = move.to))
 
-            if (promotionValidator.canPromote(board, movement)) {
+            if (promotionValidator.validateMovement(movement, board)) {
                 board.promotePiece(piece)
                 piecesGUI = piecesGUI.map {
                     if (it.id == piece.initialPosition.toString())

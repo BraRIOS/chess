@@ -5,7 +5,7 @@ import model.Position
 import model.board.Board
 import kotlin.math.abs
 
-class DiagonalMovementValidator : MovementValidator {
+class DiagonalMovementValidator : MovementValidator, PieceBetweenValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean {
         val distanceX = movement.start.distanceToX(movement.end)
         val distanceY = movement.start.distanceToY(movement.end)

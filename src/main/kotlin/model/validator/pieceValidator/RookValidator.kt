@@ -4,9 +4,10 @@ import model.Movement
 import model.board.Board
 import model.validator.movementValidator.HorizontalMovementValidator
 import model.validator.movementValidator.MovementValidator
+import model.validator.movementValidator.PieceBetweenValidator
 import model.validator.movementValidator.VerticalMovementValidator
 
-class RookValidator: MovementValidator {
+class RookValidator: MovementValidator, PieceBetweenValidator {
     private val verticalMovementValidator = VerticalMovementValidator()
     private val horizontalMovementValidator = HorizontalMovementValidator()
 

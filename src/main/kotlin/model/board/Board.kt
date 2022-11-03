@@ -99,8 +99,8 @@ class Board {
         return positions.filter { it.value.isPresent && it.value.get().type == pieceType && it.value.get().color == color }.keys.first()
     }
 
-    fun getPiece(position: Position): Piece {
-        return positions[position]?.get() ?: throw Exception("No hay pieza en la posición $position")
+    fun getPiece(position: Position): Piece? {
+        return positions[position]?.get()
     }
 
     fun getPiece(pieceType: PieceType, color: Color): Piece {

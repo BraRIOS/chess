@@ -15,7 +15,8 @@ class CastlingValidator{
     private val checkValidator = CheckValidator()
     private val kingValidator = KingValidator()
 
-    fun canCastlingWithRook(board: Board, color: Color, rook: Piece): Boolean {
+    fun canCastlingWithRook(board: Board, rook: Piece): Boolean {
+        val color = rook.color
         val king = board.getPiece(PieceType.KING, color)
         return king.hasMoved.not() && !checkValidator.isCheck(board, color) && !isCastlingThroughCheck(board, color, rook)
     }

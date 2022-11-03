@@ -5,5 +5,4 @@ import model.board.Board
 
 interface MovementValidator {
     fun validateMovement(movement: Movement, board: Board): Boolean
-    fun isPieceBetween(movement: Movement, board: Board): Boolean
 }

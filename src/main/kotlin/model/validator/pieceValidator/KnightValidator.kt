@@ -4,8 +4,9 @@ import model.Movement
 import model.board.Board
 import model.validator.movementValidator.DistanceMovementValidator
 import model.validator.movementValidator.MovementValidator
+import model.validator.movementValidator.PieceBetweenValidator
 
-class KnightValidator : MovementValidator {
+class KnightValidator : MovementValidator, PieceBetweenValidator{
     private val distanceMovementValidator = DistanceMovementValidator(1)
 
     override fun validateMovement(movement: Movement, board: Board): Boolean {

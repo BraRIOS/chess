@@ -4,7 +4,7 @@ import model.Movement
 import model.Position
 import model.board.Board
 
-class VerticalMovementValidator : MovementValidator {
+class VerticalMovementValidator : MovementValidator, PieceBetweenValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean =
         movement.start.x == movement.end.x && movement.start.y != movement.end.y &&
                 board.isInside(movement.end) && !board.isOccupiedBySameColor(movement)

@@ -3,7 +3,7 @@ package model.validator.movementValidator
 import model.Movement
 import model.board.Board
 
-class DistanceMovementValidator(private val limit:Int) : MovementValidator {
+class DistanceMovementValidator(private val limit:Int) : MovementValidator, PieceBetweenValidator {
     override fun validateMovement(movement: Movement, board: Board): Boolean =
         movement.start.distanceTo(movement.end) <= limit
 

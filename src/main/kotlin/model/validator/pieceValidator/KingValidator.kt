@@ -4,7 +4,7 @@ import model.Movement
 import model.board.Board
 import model.validator.movementValidator.*
 
-class KingValidator : MovementValidator {
+class KingValidator : MovementValidator, PieceBetweenValidator {
     private val diagonalMovementValidator = DiagonalMovementValidator()
     private val horizontalMovementValidator = HorizontalMovementValidator()
     private val verticalMovementValidator = VerticalMovementValidator()
