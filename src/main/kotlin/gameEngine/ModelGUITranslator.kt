@@ -1,4 +1,4 @@
-package model.game
+package gameEngine
 
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.PlayerColor
